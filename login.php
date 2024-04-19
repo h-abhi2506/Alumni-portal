@@ -1,73 +1,147 @@
-<?php session_start() ?>
-<div class="container-fluid">
-	<form action="" id="login-frm">
-		<div class="form-group">
-			<label for="" class="control-label">Email</label>
-			<input type="email" name="username" required="" class="form-control">
-		</div>
-		<div class="form-group">
-		<label for="password" class="control-label">Password</label>
-  							<input type="password" id="password" name="password" class="form-control">
-								<input type="checkbox" onclick="myFunction()">Show Password
-			<p style="align-items:center; text-align:center;" ><a href="index.php?page=signup" id="new_account">Create New Account</a></p>
-		</div>
-		<p style="text-align: center; justify-content:center; align-items: center;"><button class="button btn btn-info btn-sm">Login</button></p>
-		<p style="text-align: center;" ><a href="index.php" id="reset-pswrd" ></a><a href="https://docs.google.com/forms/d/e/1FAIpQLSeu8io5fRqb3Zm3bZB41EKgUXagfJOnzfWo7d1hu5oOz0R5fg/viewform?embedded=true" width="640" height="1427" frameborder="0" marginheight="0" marginwidth="0">Reset Password</a></p>
-	</div>
-	</form>
+<!DOCTYPE html>
+<html lang="en">
+<?php 
+session_start();
+include('./db_connect.php');
+ob_start();
+if(!isset($_SESSION['system'])){
+	$system = $conn->query("SELECT * FROM system_settings limit 1")->fetch_array();
+	foreach($system as $k => $v){
+		$_SESSION['system'][$k] = $v;
+	}
+}
+ob_end_flush();
+?>
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
+  <title><?php echo $_SESSION['system']['name'] ?></title>
+ 	<link rel="website icon" type="png" href="acem.png">
 
+<?php include('./header.php'); ?>
+<?php 
+if(isset($_SESSION['login_id']))
+header("location:index.php?page=home");
+
+?>
+
+</head>
 <style>
-	#uni_modal .modal-footer{
-		display:none;
+	body{
+		width: 100%;
+	    height: calc(100%);
+	    /*background: #007bff;*/
 	}
-
-	.forgot-btn{
-		text-align: right;
+	main#main{
+		width:100%;
+		height: calc(100%);
+		background:white;
 	}
-
-	.forgot-btn button{
-		border: none;
-		background-color: transparent;
-		outline: none;
-		font-weight: 450;
-		cursor: pointer;
-	}
-	.forgot-popup {
+	#login-right{
+		position: absolute;
+		right:0;
+		width:40%;
+		height: calc(100%);
+		background:white;
 		display: flex;
+		align-items: center;
 	}
+	#login-left{
+		position: absolute;
+		left:0;
+		width:60%;
+		height: calc(100%);
+		background:#59b6ec61;
+		display: flex;
+		align-items: center;
+		background: linear-gradient(to bottom, #FF9933, #FFFFFF, #128807);
+	    background-repeat: no-repeat;
+	    background-size: cover;
+	}
+	#login-right .card{
+		margin: auto;
+		z-index: 1;
+		border: none;
+		border-radius: 15px;
+	}
+	.logo {
+    margin: auto;
+    font-size: 8rem;
+    background: white;
+    padding: .5em 0.7em;
+    border-radius: 50% 50%;
+    color: #000000b3;
+    z-index: 10;
+}
+div#login-right::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(100%);
+    height: calc(100%);
+    background: #000000e0;
+}
+
 </style>
 
+<body>
+
+
+  <main id="main" class=" bg-dark">
+  		<div id="login-left">
+  		</div>
+
+  		<div id="login-right">
+  			<div class="card col-md-8">
+  				<div class="card-body">
+  						
+  					<form id="login-form" >
+  						<div class="form-group">
+  							<label for="username" class="control-label">Username</label>
+  							<input type="text" id="username" name="username" class="form-control" >
+  						</div>
+  						<div class="form-group">
+  							<label for="password" class="control-label">Password</label>
+  							<input type="password" id="password" name="password" class="form-control">
+								<input type="checkbox" onclick="myFunction()">Show Password
+  						</div>
+  						<center><button class="btn-sm btn-block btn-wave col-md-4 btn-primary">Login</button></center>
+						  <p style="text-align: center; margin-top: 10px; " ><a href="https://docs.google.com/forms/d/e/1FAIpQLSeu8io5fRqb3Zm3bZB41EKgUXagfJOnzfWo7d1hu5oOz0R5fg/viewform?embedded=true" width="640" height="1427" frameborder="0" marginheight="0" marginwidth="0"><b>Reset Password</b></a></p>
+  					</form>
+  				</div>
+  			</div>
+  		</div>
+  </main>
+  <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
+</body>
 <script>
-	$('#login-frm').submit(function(e){
+	$('#login-form').submit(function(e){
 		e.preventDefault()
-		$('#login-frm button[type="submit"]').attr('disabled',true).html('Logging in...');
+		$('#login-form button[type="button"]').attr('disabled',true).html('Logging in...');
 		if($(this).find('.alert-danger').length > 0 )
 			$(this).find('.alert-danger').remove();
 		$.ajax({
-			url:'admin/ajax.php?action=login2',
+			url:'ajax.php?action=login',
 			method:'POST',
 			data:$(this).serialize(),
 			error:err=>{
 				console.log(err)
-		$('#login-frm button[type="submit"]').removeAttr('disabled').html('Login');
+		$('#login-form button[type="button"]').removeAttr('disabled').html('Login');
 
 			},
 			success:function(resp){
 				if(resp == 1){
-					location.href ='<?php echo isset($_GET['redirect']) ? $_GET['redirect'] : 'index.php?page=home' ?>';
-				}else if(resp == 2){
-					$('#login-frm').prepend('<div class="alert alert-danger">Your account is not yet verified.</div>')
-					$('#login-frm button[type="submit"]').removeAttr('disabled').html('Login');
+					location.href ='index.php?page=home';
 				}else{
-					$('#login-frm').prepend('<div class="alert alert-danger">Email or password is incorrect.</div>')
-					$('#login-frm button[type="submit"]').removeAttr('disabled').html('Login');
+					$('#login-form').prepend('<div class="alert alert-danger">Username or password is incorrect.</div>')
+					$('#login-form button[type="button"]').removeAttr('disabled').html('Login');
 				}
 			}
 		})
 	})
-</script>
-
+</script>	
 <script>
 function myFunction() {
   var x = document.getElementById("password");
@@ -78,3 +152,4 @@ function myFunction() {
   }
 }
 </script>
+</html>
