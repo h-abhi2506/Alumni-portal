@@ -31,3 +31,28 @@ The Alumni Management System Portal is designed to streamline the management of 
 To run the Alumni Management System Portal locally, follow these steps:
 
 1. Clone the repository:
+2. Install dependencies:
+3. Set up environment variables:
+Create a `.env` file in the root directory and add the necessary environment variables (e.g., database connection string, API keys).
+4. Start the development server:
+5. Open your browser and navigate to `http://localhost:8012` to access the Alumni Portal.
+
+## Usage
+
+1. Log in as an administrator to access the dashboard and administrative features.
+2. Manage alumni profiles, events, communications, and donations through the intuitive user interface.
+3. Configure settings, permissions, and security controls to customize the portal according to institutional requirements.
+4. Engage with alumni through personalized communications, targeted events, and interactive features to foster a strong alumni community.
+
+## Contributing
+
+Contributions to the Alumni Portal project are welcome! If you'd like to contribute, please follow these guidelines:
+
+1. Fork the repository and create a new branch for your feature or bug fix.
+2. Make your changes, ensuring adherence to coding standards and best practices.
+3. Write tests for any new functionality and ensure existing tests pass.
+4. Submit a pull request with a clear description of your changes and their rationale.
+
+## License
+
+The Alumni Portal project is licensed under the [MIT License](LICENSE), which means you are free to use, modify, and distribute the code for personal or commercial purposes. However, attribution to the original authors is appreciated.
